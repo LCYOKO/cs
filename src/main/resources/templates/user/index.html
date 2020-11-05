@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>客服系统</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../static/layui/css/layui.css" media="all" />
+
+</head>
+<body>
+<button type="button" class="layui-btn" id="userButton"><i class="layui-icon layui-icon-service">&#xe60c;客服</i></button>
+
+
+</body>
+<script type="text/javascript" src="../../static/layui/layui.js"></script>
+<script type="text/javascript" src="../../static/js/jquery-3.1.1.min.js"></script>
+<script>
+    layui.use(['layer'], function () {
+        var layer=layui.layer;
+         $("#userButton").click(function () {
+             var index = layui.layer.open({
+                 title : "聊天框",
+                 type : 2,
+                 resize:true,
+                 content :"chat",
+                 area: ['60%', '100%'],
+                 success : function(layero, index){
+                     setTimeout(function(){
+                         layui.layer.tips('点击此处关闭聊天', '.layui-layer-setwin .layui-layer-close', {
+                             tips: 3
+                         });
+                     },500)
+                 }
+             })
+             // layui.layer.full(index);
+         })
+
+
+
+    })
+
+</script>

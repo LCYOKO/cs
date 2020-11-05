@@ -1,0 +1,12 @@
+server:
+  port: 8082
+spring:
+  mvc:
+    static-path-pattern: /static/**
+  datasource:
+    password: 3852159
+    username: root
+    url: jdbc:mysql://localhost:3306/cs?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.jdbc.Driver
+
+

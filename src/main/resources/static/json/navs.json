@@ -1,0 +1,94 @@
+{
+	"contentManagement": [
+		{
+			"title": "会话列表",
+			"icon": "icon-text",
+			"href": "/page/session/session-main",
+			"spread": false,
+			"children": [
+				{
+					"title": "当前会话",
+					"icon": "&#xe770;",
+					"href": "/page?method=session/session-kefu",
+					"spread": false
+				},
+				{
+					"title": "机器人托管会话",
+					"icon": "&#xe609;",
+					"href": "/page?method=session/session-bot",
+					"spread": false
+				}
+			]
+
+		},
+		{
+			"title": "机器人管理",
+			"icon": "&#xe634;",
+			"href": "page/img/images.html",
+			"spread": false
+		},
+		{
+			"title": "知识库管理",
+			"icon": "&#xe630;",
+			"href": "",
+			"spread": false,
+			"children": [
+				{
+					"title": "知识库",
+					"icon": "&#xe61c;",
+					"href": "page/404.html",
+					"spread": false
+				},
+				{
+					"title": "知识库分类",
+					"icon": "&#xe609;",
+					"href": "page/login/login.html",
+					"spread": false
+				}
+			]
+		},
+		{
+			"title": "工具箱",
+			"icon": "&#xe61c;",
+			"href": "page/404.html",
+			"spread": false,
+			"children":[
+				{
+					"title": "订单查询",
+					"icon": "&#xe61c;",
+					"href": "page/404.html",
+					"spread": false
+				},
+				{
+					"title": "快递查询",
+					"icon": "&#xe609;",
+					"href": "page/login/login.html",
+					"spread": false
+				}
+			]
+		}
+	],
+	"memberCenter": [
+		{
+			"title": "用户中心",
+			"icon": "&#xe612;",
+			"href": "page/user/userList.html",
+			"spread": false
+		},
+		{
+			"title": "权限管理",
+			"icon": "icon-vip",
+			"href": "page/user/userGrade.html",
+			"spread": false
+		},
+		{
+			"title": "日志管理",
+			"icon": "icon-log",
+			"href": "page/systemSetting/logs.html",
+			"spread": false
+		}
+	]
+
+}
+
+
