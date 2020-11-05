@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>laykefu客服工作台</title>
+    <link rel="stylesheet" href="../../../static/layui/css/layui.css">
+    <link rel="stylesheet" href="../../../static/css/kefu.css">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout ">
+    <div class="layui-side" style="background:#f2f2f2">
+        <div class="layui-side-scroll">
+            <blockquote class="layui-elem-quote layui-bg-cyan" style="color: white">正在咨询的会话</blockquote>
+            <ul class="layui-unselect" id="user_list">
+            </ul>
+        </div>
+    </div>
+    <div class="layui-body" style="bottom:0">
+        <input type="hidden" id="active-user" data-avatar="" data-name="" data-id=""><!-- 当前对话的用户 -->
+        <div class="chat-left">
+            <div class="chat-box laykefu-chat-main">
+            </div>
+            <div class="msg-send">
+                <div class="tools-bar">
+                    <i class="layui-icon" style="font-size: 30px;" id="face">&#xe60c;</i>
+                    <i class="layui-icon" style="font-size: 30px;" id="image">&#xe60d;</i>
+                    <i class="layui-icon" style="font-size: 30px;" id="file">&#xe61d;</i>
+                    <i class="layui-icon " style="font-size: 10px;float: right;" id="trustSession">托管</i>
+                    <i class="layui-icon " style="font-size: 10px;float: right;" id="closeSession">关闭会话</i>
+                </div>
+                <div class="msg-box">
+                    <textarea class="msg-area" id="msg-area"></textarea>
+                </div>
+                <div class="send-area">
+                    <span style="margin-left:10px;color:gray">快捷键 Enter</span>
+
+                    <button class="layui-btn layui-btn-small layui-bg-cyan" style="float:right;margin-right:10px;height: 40px;padding: 0 15px;" id="send">
+                        <i class="layui-icon">&#xe609;</i>发送
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
+        <div style="width:28%;height:100%;float:left;margin-left:1%">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">知识库</li>
+                    <li>常用语</li>
+                </ul>
+                <div class="layui-tab-content" style="height: 100px;">
+                    <div class="layui-tab-item layui-show">
+                        <div class="layui-form layui-form-pane">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">访客名</label>
+                                <div class="layui-input-block">
+                                    <input type="text" id="f-user" class="layui-input" readonly>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">IP</label>
+                                <div class="layui-input-block">
+                                    <input type="text" id="f-ip" class="layui-input" readonly>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">地区</label>
+                                <div class="layui-input-block">
+                                    <input type="text" id="f-area" class="layui-input" readonly>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label layui-bg-cyan" style="cursor: pointer;color:white" id="scroll-link">转接</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <div class="layui-form">
+                            <table class="layui-table" id="QATable" lay-filter="test">
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 转接提示层 -->
+<div class="layui-form" id="change-box" style="display: none">
+    <div class="layui-form-item" style="margin-top: 20px">
+        <label class="layui-form-label">选择分组</label>
+        <div class="layui-input-block" style="width: 70%" >
+            <select lay-verify="required" lay-filter="group">
+                <option value=""></option>
+                <option value="1">售前组</option>
+                <option value="2">售后组</option>
+            </select>
+        </div>
+    </div>
+</div>
+<!-- 转接提示层 -->
+
+<script src="../../../static/js/jquery-3.1.1.min.js"></script>
+<script src="../../../static/layui/layui.js"></script>
+<script>
+    var uid = "2";
+    var uname = "客服小美";
+    var avatar = "/uploads/20190419/4eb84234138339f27018e1e3625afd15.jpg";
+    var group = "1";
+    var socket_server = "";
+</script>
+<script type="text/javascript" src="../../../static/js/functions.js"></script>
+<script type="text/javascript" src="../../../static/js/kefu.js"></script>
+<script>
+    var stompClient;
+    init(123);
+
+</script>
+</body>
+</html>

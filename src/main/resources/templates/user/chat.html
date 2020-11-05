@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../static/layui/css/layui.css">
+    <link rel="stylesheet" href="../../static/css/chat.css">
+</head>
+<body>
+<div class="layui-body" style="bottom:0;left: 0px">
+    <input type="hidden" id="active-user" data-avatar="" data-name="" data-id=""><!-- 当前对话的用户 -->
+    <div class="chat-left">
+        <div class="chat-box laykefu-chat-main">
+     </div>
+        <div class="msg-send">
+            <div class="tools-bar">
+                <i class="layui-icon" style="font-size: 30px;" id="face">&#xe60c;</i>
+                <i class="layui-icon" style="font-size: 30px;" id="image">&#xe60d;</i>
+                <i class="layui-icon" style="font-size: 30px;" id="file">&#xe61d;</i>
+                <i class="layui-icon layui-icon-close" style="font-size: 10px;float: right;" id="userSession">关闭会话</i>
+            </div>
+            <div class="msg-box">
+                <textarea class="msg-area" id="user-msg-area"></textarea>
+            </div>
+            <div class="send-area">
+                <span style="margin-left:10px;color:gray">快捷键 Enter</span>
+                <button class="layui-btn layui-btn-small layui-bg-cyan" style="float:right;margin-right:10px;height: 40px;padding: 0 15px;" id="user-send">
+                    <i class="layui-icon">&#xe609;</i>发送
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../../static/js/sockjs.min.js"></script>
+<script type="text/javascript" src="../../static/js/stomp.min.js"></script>
+<script type="text/javascript" src="../../static/js/mySocket.js"></script>
+<script type="text/javascript" src="../../static/layui/layui.js"></script>
+<script type="text/javascript" src="../../static/js/jquery-3.1.1.min.js"></script>
+<script>
+    var stompClient;
+    init(123);
+    $(function () {
+
+
+        // 监听快捷键发送
+        document.getElementById('user-msg-area').addEventListener('keydown', function (e) {
+           console.log(123)
+            if (e.keyCode != 13) return;
+            e.preventDefault();  // 取消事件的默认动作
+            console.log()
+            //sendMessage();
+        });
+
+        // 点击表情
+        var index;
+        $("#face").click(function (e) {
+            e.stopPropagation();
+            layui.use(['layer'], function () {
+                var layer = layui.layer;
+
+                var isShow = $(".layui-laykefu-face").css('display');
+                if ('block' == isShow) {
+                    layer.close(index);
+                    return;
+                }
+                var height = $(".chat-box").height() - 110;
+                layer.ready(function () {
+                    index = layer.open({
+                        type: 1,
+                        offset: [height + 'px', $(".layui-side").width() + 'px'],
+                        shade: false,
+                        title: false,
+                        closeBtn: 0,
+                        area: '395px',
+                        content: showFaces()
+                    });
+                });
+            });
+        });
+
+        // $(document).click(function (e) {
+        //     layui.use(['layer'], function () {
+        //         var layer = layui.layer;
+        //         if (isShow) {
+        //             layer.close(index);
+        //             return false;
+        //         }
+        //     });
+        // });
+
+        // 发送消息
+        $("#user-send").click(function () {
+            var msg = (typeof(sendMsg) == 'undefined') ? $(".msg-area").val() : sendMsg;
+            if ('' === msg) {
+                layui.use(['layer'], function () {
+                    var layer = layui.layer;
+                    return layer.msg('请输入回复内容', {time: 1000});
+                });
+                return false;
+            }
+            sendMessage(123,msg);
+        });
+
+        // hover用户
+        $(".layui-unselect li").hover(function () {
+            $(this).find('i').show();
+        }, function () {
+            $(this).find('i').hide();
+        });
+
+
+
+        //关闭当前会话
+        $("#closeSession").click(function(){
+            var layerIndex;
+            console.log(1111)
+            layerIndex = layer.confirm('确定关闭会话' , {
+                title: '关闭提示',
+                closeBtn: 0,
+                icon: 3,
+                btn: ['确定', '取消'] // 按钮
+            }, function(){
+                // layer.close(layerIndex);
+                // layerIndex = layer.open({
+                //     title: '',
+                //     type: 1,
+                //     area: ['30%', '40%'],
+                //     content: $("#change-box")
+                // });
+            });
+
+        });
+
+
+
+
+        // 检测滚动，异步加载更多聊天数据
+        $(".chat-box").scroll(function () {
+            var top = $(".chat-box").scrollTop();
+        });
+
+    });
+
+</script>
+</html>
