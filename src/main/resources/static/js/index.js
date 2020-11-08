@@ -36,6 +36,28 @@ layui.use(['bodyTab','form','element','layer','jquery'],function(){
             }
 		})
 	}
+
+	//退出
+	$("#logOut").click(function () {
+        $.ajax({
+            url:'/logout',
+            success:function (res) {
+                var index=  layer.open({
+                    title: '提示',
+                    content: "退出成功",
+                    success: function(layero, index){
+                        setTimeout(function () {
+                            layer.close(index);
+                            window.location.href="/";
+                        },2000);
+                    }
+                });
+
+            }
+
+        })
+    })
+	
 	//页面加载时判断左侧菜单是否显示
 	//通过顶部菜单获取左侧菜单
 	$(".topLevelMenus li,.mobileTopLevelMenus dd").click(function(){

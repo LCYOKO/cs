@@ -20,11 +20,13 @@ public class AuthInterceptor implements HandlerInterceptor {
     private final String LOGIN_URL="/toLogin";
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String uri = request.getRequestURI();
-
         User user=(User) request.getSession().getAttribute("user");
+        System.out.println(request.getRequestURI());
+        if(user==null){
         response.sendRedirect(LOGIN_URL);
-        return false;
+         return  false;
+        }
+        return true;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.xiaomi.cs.pojo;
+package com.xiaomi.cs.pojo.message;
 
 import lombok.Data;
 
