@@ -1,7 +1,7 @@
 package com.xiaomi.cs.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.xiaomi.cs.pojo.CustomerMessage;
+import com.xiaomi.cs.pojo.message.CustomerMessage;
 
 /**
  * @author l

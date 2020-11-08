@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -8,10 +8,11 @@
 </head>
 <body>
 <div class="layui-body" style="bottom:0;left: 0px">
-    <input type="hidden" id="active-user" data-avatar="" data-name="" data-id=""><!-- 当前对话的用户 -->
+    <input type="hidden" id="active-user" fid="-1"  th:attr="data-id=${session.user.id},data-name=${session.user.username}"><!-- 当前对话的用户 -->
     <div class="chat-left">
         <div class="chat-box laykefu-chat-main">
-     </div>
+            <ul th:attr="id=${session.user.id}" style="display: block" ></ul>
+        </div>
         <div class="msg-send">
             <div class="tools-bar">
                 <i class="layui-icon" style="font-size: 30px;" id="face">&#xe60c;</i>
@@ -34,19 +35,19 @@
 </div>
 </body>
 <script type="text/javascript" src="../../static/js/sockjs.min.js"></script>
-<script type="text/javascript" src="../../static/js/stomp.min.js"></script>
+
 <script type="text/javascript" src="../../static/js/mySocket.js"></script>
 <script type="text/javascript" src="../../static/layui/layui.js"></script>
 <script type="text/javascript" src="../../static/js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="../../static/js/kefu.js"></script>
+<script type="text/javascript" src="../../static/js/functions.js"></script>
 <script>
-    var stompClient;
-    init(123);
+    var socketClient;
+    init("customer");
     $(function () {
-
-
         // 监听快捷键发送
         document.getElementById('user-msg-area').addEventListener('keydown', function (e) {
-           console.log(123)
+
             if (e.keyCode != 13) return;
             e.preventDefault();  // 取消事件的默认动作
             console.log()
@@ -92,7 +93,7 @@
 
         // 发送消息
         $("#user-send").click(function () {
-            var msg = (typeof(sendMsg) == 'undefined') ? $(".msg-area").val() : sendMsg;
+            var msg = $("#user-msg-area").val()
             if ('' === msg) {
                 layui.use(['layer'], function () {
                     var layer = layui.layer;
@@ -100,7 +101,8 @@
                 });
                 return false;
             }
-            sendMessage(123,msg);
+            sendMessage(msg);
+
         });
 
         // hover用户

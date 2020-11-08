@@ -12,7 +12,8 @@ import java.util.Date;
 public class User {
   private Integer id;
   private String miliao;
-  private String userName;
+  private Integer kefu;
+  private String username;
   private String password;
   private Date  lastModifyTime;
   private Long createTime;

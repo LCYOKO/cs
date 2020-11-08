@@ -1,26 +1,27 @@
 
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>laykefu客服工作台</title>
+    <title>kefu客服工作台</title>
     <link rel="stylesheet" href="../../../static/layui/css/layui.css">
     <link rel="stylesheet" href="../../../static/css/kefu.css">
 </head>
 <body class="layui-layout-body">
+<div hidden id="kefu" data-avatar="" data-name=""></div>
 <div class="layui-layout ">
     <div class="layui-side" style="background:#f2f2f2">
         <div class="layui-side-scroll">
             <blockquote class="layui-elem-quote layui-bg-cyan" style="color: white">正在咨询的会话</blockquote>
-            <ul class="layui-unselect" id="user_list">
-            </ul>
+            <ul class="layui-unselect" id="user_list"></ul>
         </div>
     </div>
     <div class="layui-body" style="bottom:0">
-        <input type="hidden" id="active-user" data-avatar="" data-name="" data-id=""><!-- 当前对话的用户 -->
+        <input type="hidden" id="active-user" fid="-1"  th:attr="data-id=${session.user.id},data-name=${session.user.username}"><!-- 当前对话的用户 -->
         <div class="chat-left">
             <div class="chat-box laykefu-chat-main">
+                <ul th:attr="id=${session.user.id}" style="display: block" ></ul>
             </div>
             <div class="msg-send">
                 <div class="tools-bar">
@@ -115,9 +116,10 @@
 </script>
 <script type="text/javascript" src="../../../static/js/functions.js"></script>
 <script type="text/javascript" src="../../../static/js/kefu.js"></script>
+<script type="text/javascript" src="../../../static/js/mySocket.js"></script>
 <script>
-    var stompClient;
-    init(123);
+    var socketClient;
+    init("support");
 
 </script>
 </body>

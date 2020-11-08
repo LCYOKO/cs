@@ -3,11 +3,6 @@ layui.use(['form','layer','jquery'],function(){
         layer = parent.layer === undefined ? layui.layer : top.layer
         $ = layui.jquery;
 
-    $(".loginBody .seraph").click(function(){
-        layer.msg("这只是做个样式，至于功能，你见过哪个后台能这样登录的？还是老老实实的找管理员去注册吧",{
-            time:5000
-        });
-    })
 
     //登录按钮
     form.on("submit(login)",function(data){
@@ -17,25 +12,27 @@ layui.use(['form','layer','jquery'],function(){
         $.ajax({
             url:'/login',
             dataType: 'json',
-            data:{username:username,passwrod:password},
+            data:{miliao:username,password:password},
             success:function (res) {
                 console.log(res);
-                res.msg='123123';
                 if(res===undefined){
                     openLayer("未知错误");
                 }
-                else if(res.code!=200) openLayer(res.msg);
-                else window.location.href="/";
+                else if(res.code!==2000) openLayer(res.msg);
+                else {
+                    console.log(res);
+                    window.location.href=res.data;
+                }
 
             }
 
         })
 
         function openLayer(msg) {
-            console.log(msg);
+            //console.log(msg);
           var index=  layer.open({
                  title: '提示',
-                content: msg,
+                 content: msg,
                 success: function(layero, index){
                     setTimeout(function () {
                     layer.close(index);
@@ -43,10 +40,7 @@ layui.use(['form','layer','jquery'],function(){
                 }
             });
         }
-        // $(this).text("登录中...").attr("disabled","disabled").addClass("layui-disabled");
-        // setTimeout(function(){
-        //     window.location.href = "/layuicms2.0";
-        // },1000);
+
         return false;
     })
 
