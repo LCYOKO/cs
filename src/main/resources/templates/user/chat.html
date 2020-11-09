@@ -9,6 +9,7 @@
 <body>
 <div class="layui-body" style="bottom:0;left: 0px">
     <input type="hidden" id="active-user" fid="-1"  th:attr="data-id=${session.user.id},data-name=${session.user.username}"><!-- 当前对话的用户 -->
+    <input type="hidden" id="from-user"   from-name="" from-id="-1">
     <div class="chat-left">
         <div class="chat-box laykefu-chat-main">
             <ul th:attr="id=${session.user.id}" style="display: block" ></ul>
@@ -43,7 +44,7 @@
 <script type="text/javascript" src="../../static/js/functions.js"></script>
 <script>
     var socketClient;
-    init("customer");
+    init("customer",$("#active-user").attr("data-name"),$("#active-user").attr("data-id"));
     $(function () {
         // 监听快捷键发送
         document.getElementById('user-msg-area').addEventListener('keydown', function (e) {

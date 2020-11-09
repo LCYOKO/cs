@@ -146,10 +146,11 @@ function sendMessage(sendMsg) {
         });
         return false;
     }
-    console.log(sendMsg);
+
     var uid = $("#active-user").attr('data-id');
     var uname = $("#active-user").attr('data-name');
-   socketClient.send(JSON.stringify({username:uname,id:uid,msg:msg,type:1}));
+    var sendData=createMessage(msg,uid,uname);
+   socketClient.send(sendData);
     var word = msgFactory(msg, 'mine', uinfo);
 
     $("#" + uid).append(word);
@@ -169,7 +170,7 @@ function f() {
 }
 
 // 展示客服发送来的消息
-function showUserMessage(uid, content) {
+function showUserMessage(data) {
     // if ($('#f-' + uid).length == 0) {
     //     addUser(uinfo);
     // }
@@ -182,10 +183,12 @@ function showUserMessage(uid, content) {
     //     $('#f-' + uinfo.id).find('span:eq(1)').removeClass('layui-badge').addClass('layui-badge').text(num);
     // }
 
-    var word = msgFactory(content, 'user', uinfo);
-    var uid1 = $("#active-user").attr('data-id');
+    localStorage.setItem("fromName",data.fromUsername);
+    localStorage.setItem("fromId",data.fromUid);
+    var word = msgFactory(data.msg, 'user', data.fromUsername);
+    var uid = $("#active-user").attr('data-id');
     setTimeout(function () {
-        $("#" + uid1).append(word);
+        $("#" + uid).append(word);
         // 滚动条自动定位到最底端
         wordBottom();
         showBigPic();

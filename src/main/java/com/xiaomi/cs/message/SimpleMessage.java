@@ -11,6 +11,8 @@ import org.springframework.web.socket.WebSocketMessage;
 public class SimpleMessage  {
    private int type;
    private String msg;
-   private int uid;
-   private String name;
+   private int fromUid;
+   private String fromUsername;
+   private int toUid;
+   private String toUsername;
 }

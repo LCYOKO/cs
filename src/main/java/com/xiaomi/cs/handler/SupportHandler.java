@@ -1,7 +1,9 @@
 package com.xiaomi.cs.handler;
 
 
+import com.xiaomi.cs.pojo.entity.MySession;
 import com.xiaomi.cs.pool.SupportPool;
+import com.xiaomi.cs.utils.SessionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -19,8 +21,8 @@ public class SupportHandler extends TextWebSocketHandler {
     private SupportPool supportPool;
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-
-       supportPool.addSupport(session);
+        MySession mySession = SessionUtil.generateSession(session.getUri().getQuery(), session.getId());
+        supportPool.addSupport(session,mySession);
     }
 
     @Override

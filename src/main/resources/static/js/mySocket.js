@@ -1,10 +1,10 @@
 
-function init(type) {
+function init(type,username,uid) {
 
 
 
   //var protocol = location.protocol === 'https:' ? 'wss://' : 'ws://';
-  socketClient = new WebSocket("ws://192.168.0.107:8082/webSocket/"+type);//创建Socket实例// 打开Socket
+  socketClient = new WebSocket("ws://localhost:8082/webSocket/"+type+"?username="+username+"&uid="+uid);//创建Socket实例// 打开Socket
 socketClient.onopen = function (res) {
     layui.use(['layer'], function () {
         var layer = layui.layer;
@@ -42,7 +42,7 @@ socketClient.onmessage = function (res) {
             break;
         // 监测聊天数据
         case 1:
-            showUserMessage(data.uid, data.msg);
+            showUserMessage(data);
             break;
         case 'close':
             loginOut();
@@ -75,9 +75,17 @@ socketClient.onmessage = function (res) {
     // );
 }
 
-// function sendMessage(msg) {
-//     socketClient.send(msg);
-// }
+function createMessage(msg,uid,uname) {
+    var data={
+        toId: localStorage.getItem("fromId"),
+        toName:localStorage.getItem("fromName"),
+        fromId:uid,
+        fromName:uname,
+        msg:msg,
+        type:1
+            };
+    return JSON.stringify(data);
+}
 
 
 

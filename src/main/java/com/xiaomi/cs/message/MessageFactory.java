@@ -15,10 +15,23 @@ public class MessageFactory {
         if(type==MessageTypeConstants.FIRST_CONNECTION){
                   message.setMsg(msg);
                   message.setType(MessageTypeConstants.TYPE_SEND_MESSAGE);
-                  message.setUid(-1);
-                  message.setName("废物1号");
+                  message.setFromUid(-1);
+                  message.setFromUsername("BOT01");
              return new TextMessage(JSONArray.toJSON(message).toString().getBytes());
         }
         return  null;
     }
+
+    public  static SimpleMessage create2CustomerMessage(int to,String toName,int from ,String fromName,String msg,int type){
+        SimpleMessage message = new SimpleMessage();
+        message.setFromUid(from);
+        message.setFromUsername(fromName);
+        message.setToUid(to);
+        message.setToUsername(toName);
+        message.setMsg(msg);
+        message.setType(type);
+        return message;
+    }
+
+
 }
