@@ -21,7 +21,7 @@
         <input type="hidden" id="active-user" fid="-1"  th:attr="data-id=${session.user.id},data-name=${session.user.username}"><!-- 当前对话的用户 -->
         <div class="chat-left">
             <div class="chat-box laykefu-chat-main">
-                <ul th:attr="id=${session.user.id}" style="display: block" ></ul>
+                <!--<ul th:attr="id=${session.user.id}" style="display: block" ></ul>-->
             </div>
             <div class="msg-send">
                 <div class="tools-bar">
@@ -107,20 +107,103 @@
 
 <script src="../../../static/js/jquery-3.1.1.min.js"></script>
 <script src="../../../static/layui/layui.js"></script>
-<script>
-    var uid = "2";
-    var uname = "客服小美";
-    var avatar = "/uploads/20190419/4eb84234138339f27018e1e3625afd15.jpg";
-    var group = "1";
-    var socket_server = "";
-</script>
+
 <script type="text/javascript" src="../../../static/js/functions.js"></script>
 <script type="text/javascript" src="../../../static/js/kefu.js"></script>
 <script type="text/javascript" src="../../../static/js/mySocket.js"></script>
 <script>
     var socketClient;
-    init("support");
+    init("support",$("#active-user").attr("data-name"),$("#active-user").attr("data-id"));
+    $(function () {
+        // 监听快捷键发送
+        document.getElementById('msg-area').addEventListener('keydown', function (e) {
+            if (e.keyCode != 13) return;
+            e.preventDefault();  // 取消事件的默认动作
+            sendMessage( $("#msg-area").val(),"support");
+        });
 
+        // 点击表情
+        var index;
+        $("#face").click(function (e) {
+            e.stopPropagation();
+            layui.use(['layer'], function () {
+                var layer = layui.layer;
+
+                var isShow = $(".layui-laykefu-face").css('display');
+                if ('block' == isShow) {
+                    layer.close(index);
+                    return;
+                }
+                var height = $(".chat-box").height() - 110;
+                layer.ready(function () {
+                    index = layer.open({
+                        type: 1,
+                        offset: [height + 'px', $(".layui-side").width() + 'px'],
+                        shade: false,
+                        title: false,
+                        closeBtn: 0,
+                        area: '395px',
+                        content: showFaces()
+                    });
+                });
+            });
+        });
+
+
+
+        // 发送消息
+        $("#send").click(function () {
+            var msg = $("#msg-area").val()
+            if ('' === msg) {
+                layui.use(['layer'], function () {
+                    var layer = layui.layer;
+                    return layer.msg('请输入回复内容', {time: 1000});
+                });
+                return false;
+            }
+            sendMessage(msg,"support");
+
+        });
+
+        // hover用户
+        $(".layui-unselect li").hover(function () {
+            $(this).find('i').show();
+        }, function () {
+            $(this).find('i').hide();
+        });
+
+
+
+        //关闭当前会话
+        $("#closeSession").click(function(){
+            var layerIndex;
+            console.log(1111)
+            layerIndex = layer.confirm('确定关闭会话' , {
+                title: '关闭提示',
+                closeBtn: 0,
+                icon: 3,
+                btn: ['确定', '取消'] // 按钮
+            }, function(){
+                // layer.close(layerIndex);
+                // layerIndex = layer.open({
+                //     title: '',
+                //     type: 1,
+                //     area: ['30%', '40%'],
+                //     content: $("#change-box")
+                // });
+            });
+
+        });
+
+
+
+
+        // 检测滚动，异步加载更多聊天数据
+        $(".chat-box").scroll(function () {
+            var top = $(".chat-box").scrollTop();
+        });
+
+    });
 </script>
 </body>
 </html>

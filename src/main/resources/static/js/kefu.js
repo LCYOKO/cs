@@ -8,33 +8,33 @@ var uinfo = {
 
 $(function () {
     // 获取服务用户列表
-    $.getJSON('/service/index/getUserList', function(res){
-        if(1 == res.code && res.data.length > 0){
-            $.each(res.data, function(k, v){
-                addUser(v);
-            });
-
-            var id = $(".layui-unselect").find('li').eq(0).data('id');
-            var name = $(".layui-unselect").find('li').eq(0).data('name');
-            var avatar = $(".layui-unselect").find('li').eq(0).data('avatar');
-            var ip = $(".layui-unselect").find('li').eq(0).data('ip');
-
-            // 默认设置第一个用户为当前对话的用户
-            $("#active-user").attr('data-id', id).attr('data-name', name).attr('data-avatar', avatar).attr('data-ip', ip);
-
-            $(".layui-unselect").find('li').eq(0).addClass('active').find('span:eq(1)').removeClass('layui-badge').text('');
-            $("#f-user").val(name);
-            $("#f-ip").val(ip);
-
-            $.getJSON('/service/index/getCity', {ip: ip}, function(res){
-                $("#f-area").val(res.data);
-            });
-
-            // 拉取和这个人的聊天记录
-            $("#u-" + id).show();
-            getChatLog(id, 1);
-        }
-    });
+    // $.getJSON('/service/index/getUserList', function(res){
+    //     if(1 == res.code && res.data.length > 0){
+    //         $.each(res.data, function(k, v){
+    //             addUser(v);
+    //         });
+    //
+    //         var id = $(".layui-unselect").find('li').eq(0).data('id');
+    //         var name = $(".layui-unselect").find('li').eq(0).data('name');
+    //         var avatar = $(".layui-unselect").find('li').eq(0).data('avatar');
+    //         var ip = $(".layui-unselect").find('li').eq(0).data('ip');
+    //
+    //         // 默认设置第一个用户为当前对话的用户
+    //         $("#active-user").attr('data-id', id).attr('data-name', name).attr('data-avatar', avatar).attr('data-ip', ip);
+    //
+    //         $(".layui-unselect").find('li').eq(0).addClass('active').find('span:eq(1)').removeClass('layui-badge').text('');
+    //         $("#f-user").val(name);
+    //         $("#f-ip").val(ip);
+    //
+    //         $.getJSON('/service/index/getCity', {ip: ip}, function(res){
+    //             $("#f-area").val(res.data);
+    //         });
+    //
+    //         // 拉取和这个人的聊天记录
+    //         $("#u-" + id).show();
+    //         getChatLog(id, 1);
+    //     }
+    // });
 
     // 监听快捷键发送
     document.getElementById('msg-area').addEventListener('keydown', function (e) {

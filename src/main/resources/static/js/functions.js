@@ -137,7 +137,7 @@ function checkFace(obj) {
 }
 
 // 发送消息
-function sendMessage(sendMsg) {
+function sendMessage(sendMsg,type) {
     var msg = (typeof(sendMsg) == 'undefined') ? $("#msg-area").val() : sendMsg;
     if ('' == msg) {
         layui.use(['layer'], function () {
@@ -146,46 +146,47 @@ function sendMessage(sendMsg) {
         });
         return false;
     }
-    console.log(sendMsg);
+
     var uid = $("#active-user").attr('data-id');
     var uname = $("#active-user").attr('data-name');
-   socketClient.send(JSON.stringify({username:uname,id:uid,msg:msg,type:1}));
+    var sendData
+    if(type===undefined||type==='customer')  sendData=createMessage(msg,uid,uname);
+    else sendData=createSupportMessage(msg,uid,uname)
+
+   socketClient.send(sendData);
     var word = msgFactory(msg, 'mine', uinfo);
-
-    $("#" + uid).append(word);
+    if (type===undefined||type==='customer') $("#u-" + uid).append(word);
+    else {
+        $("#u-"+$("#user_list .active").attr("data-id")).append(word);
+    }
     $(".msg-area").val('');
     // 滚动条自动定位到最底端
     wordBottom();
 
 }
-function f() {
-    var word = msgFactory("123", "", {name:"wule"});
-    var uid = $("#active-user").attr('data-id');
-    var uname = $("#active-user").attr('data-name');
-    $("#" + uid).append(word);
-    $(".msg-area").val('');
-    // 滚动条自动定位到最底端
-    wordBottom();
-}
+
 
 // 展示客服发送来的消息
-function showUserMessage(uid, content) {
+function showUserMessage(data) {
     // if ($('#f-' + uid).length == 0) {
     //     addUser(uinfo);
     // }
 
-    // 未读条数计数
-    // if (!$('#f-' + uid).hasClass('active')) {
-    //     var num = $('#f-' + uinfo.id).find('span:eq(1)').text();
-    //     if (num == '') num = 0;
-    //     num = parseInt(num) + 1;
-    //     $('#f-' + uinfo.id).find('span:eq(1)').removeClass('layui-badge').addClass('layui-badge').text(num);
-    // }
+    //未读条数计数你好 我是KF 机器人，有什么可以为你服务的
+    console
+    if (!$('#f-' + data.fromUid).hasClass('active')) {
+        var num = $('#f-' + data.fromUid).find('span:eq(1)').text();
+        if (num === '' || num=== undefined ) num = 0;
+        num = parseInt(num) + 1;
+        $('#f-' + data.fromUid).find('span:eq(1)').removeClass('layui-badge').addClass('layui-badge').text(num);
+    }
 
-    var word = msgFactory(content, 'user', uinfo);
-    var uid1 = $("#active-user").attr('data-id');
+    localStorage.setItem("fromName",data.fromUsername);
+    localStorage.setItem("fromId",data.fromUid);
+    var word = msgFactory(data.msg, 'user', data.fromUsername);
     setTimeout(function () {
-        $("#" + uid1).append(word);
+        if($('#user_list li').length===0) $("#u-" + data.toUid).append(word);
+        else $("#u-"+data.fromUid).append(word);
         // 滚动条自动定位到最底端
         wordBottom();
         showBigPic();
@@ -243,15 +244,15 @@ function changeUserTab(obj) {
 function addUser(data) {
     var add = true;
     $('.layui-nav-item').each(function(i){
-        if(parseInt($(this).attr('data-id'))==data.id) {
+        if(parseInt($(this).attr('data-id'))==data.fromUid) {
             add =  false;
         }
     });
     if(add){
-        var _html = '<li class="layui-nav-item" data-id="' + data.id + '" id="f-' + data.id +
-            '" data-name="' + data.name + '" data-avatar="' + data.avatar + '" data-ip="' + data.ip + '">';
-        _html += '<img src="' + data.avatar + '">';
-        _html += '<span class="user-name">' + data.name + '</span>';
+        var _html = '<li class="layui-nav-item"  id="f-' + data.fromUid +
+            '" data-name="' + data.fromUsername + '" data-id="' + data.fromUid + '" >';
+        _html += '<img src="' + 123 + '">';
+        _html += '<span class="user-name">' + data.fromUsername + '</span>';
         _html += '<span class="layui-badge" style="margin-left:5px">0</span>';
         _html += '<i class="layui-icon close" style="display:none">ဇ</i>';
         _html += '</li>';
@@ -259,37 +260,28 @@ function addUser(data) {
         $("#user_list").append(_html);
 
         // 如果没有选中人，选中第一个
+
         var hasActive = 0;
         $("#user_list li").each(function(){
+
             if($(this).hasClass('active')){
+
                 hasActive = 1;
             }
         });
 
         var _html2 = '';
-        _html2 += '<ul id="u-' + data.id + '">';
+        _html2 += '<ul id="u-' + data.fromUid + '">';
         _html2 += '</ul>';
         // 添加主聊天面板
         $('.chat-box').append(_html2);
 
         if(0 == hasActive){
             $("#user_list").find('li').eq(0).addClass('active').find('span:eq(1)').removeClass('layui-badge').text('');
-            $("#u-" + data.id).show();
-
-            var id = $(".layui-unselect").find('li').eq(0).data('id');
-            var name = $(".layui-unselect").find('li').eq(0).data('name');
-            var ip = $(".layui-unselect").find('li').eq(0).data('ip');
-            var avatar = $(".layui-unselect").find('li').eq(0).data('avatar');
-
-            // 设置当前会话用户
-            $("#active-user").attr('data-id', id).attr('data-name', name).attr('data-avatar', avatar).attr('data-ip', ip);
-
-            $("#f-user").val(name);
-            $("#f-ip").val(ip);
-
-            $.getJSON('/Houtailogin/chat/getCity', {ip: ip}, function(res){
-                $("#f-area").val(res.data);
-            });
+            $("#u-"+data.fromUid).css('display','block');
+            $("#u-" + data.fromUid).show();
+            console.log(123);
+            $("#f-user").val(data.fromUsername);
         }
 
         getChatLog(data.id, 1);
@@ -302,16 +294,16 @@ function addUser(data) {
 function checkUser() {
 
     $(".layui-unselect").find('li').unbind("click"); // 防止事件叠加
+
     // 切换用户
     $(".layui-unselect").find('li').bind('click', function () {
         changeUserTab($(this));
-        var uid = $(this).data('id');
-        var avatar = $(this).data('avatar');
-        var name = $(this).data('name');
-        var ip = $(this).data('ip');
+        var uid = $(this).attr('data-id');
+        var name = $(this).data('data-name');
+
         // 展示相应的对话信息
         $('.chat-box ul').each(function () {
-            if ('u-' + uid == $(this).attr('id')) {
+            if ("u-"+uid === $(this).attr('id')) {
                 $(this).addClass('show-chat-detail').siblings().removeClass('show-chat-detail').attr('style', '');
                 return false;
             }
@@ -320,18 +312,8 @@ function checkUser() {
         // 去除消息提示
         $(this).find('span').eq(1).removeClass('layui-badge').text('');
 
-        // 设置当前会话的用户
-        $("#active-user").attr('data-id', uid).attr('data-name', name).attr('data-avatar', avatar).attr('data-ip', ip);
-
-        // 右侧展示详情
-        $("#f-user").val(name);
-        $("#f-ip").val(ip);
-        $.getJSON('/service/index/getCity', {ip: ip}, function(res){
-            $("#f-area").val(res.data);
-        });
-
-        getChatLog(uid, 1);
-
+        // 消息未落库，暂时没没法操作
+        // getChatLog(uid, 1);
         wordBottom();
     });
 }
@@ -425,4 +407,17 @@ function getMore(obj){
     var page = $(obj).attr('data-page');
     var uid = $(".layui-unselect").find('.active').data('id');
     getChatLog(uid, page, 1);
+}
+
+function createSupportMessage(msg,uid,uname) {
+    var toUid=$("#user_list .active").attr("data-id");
+    var toUsername=$("#user_list .active").attr("data-name");
+    return  JSON.stringify({
+        toUid:toUid,
+        toUsername:toUsername,
+        fromUid:uid,
+        fromUsername:uname,
+        msg:msg,
+        type:1
+    })
 }

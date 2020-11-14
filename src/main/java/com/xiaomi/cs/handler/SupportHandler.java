@@ -1,7 +1,14 @@
 package com.xiaomi.cs.handler;
 
 
+import com.alibaba.fastjson.JSONObject;
+import com.xiaomi.cs.common.MessageTypeConstants;
+import com.xiaomi.cs.message.MessageFactory;
+import com.xiaomi.cs.message.SimpleMessage;
+import com.xiaomi.cs.pojo.entity.MySession;
 import com.xiaomi.cs.pool.SupportPool;
+import com.xiaomi.cs.utils.MessageDispatcher;
+import com.xiaomi.cs.utils.SessionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -17,10 +24,12 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 public class SupportHandler extends TextWebSocketHandler {
     @Autowired
     private SupportPool supportPool;
+    @Autowired
+    private MessageDispatcher messageDispatcher;
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-
-       supportPool.addSupport(session);
+        MySession mySession = SessionUtil.generateSession(session.getUri().getQuery(), session.getId());
+        supportPool.addSupport(session,mySession);
     }
 
     @Override
@@ -28,9 +37,12 @@ public class SupportHandler extends TextWebSocketHandler {
                                   TextMessage message) throws Exception {
         // TODO Auto-generated method stub
         String msg = message.getPayload();
-        System.out.println("handlerText===========>" + msg);
 
-
+        SimpleMessage simpleMessage = JSONObject.parseObject(msg, SimpleMessage.class);
+        messageDispatcher.sendMessage2Customer(MessageFactory.create2CustomerMessage(simpleMessage.getToUid(),simpleMessage.getToUsername(),
+                simpleMessage.getFromUid(),simpleMessage.getFromUsername(),simpleMessage.getMsg(),MessageTypeConstants.TYPE_SEND_MESSAGE),
+                simpleMessage.getToUid()
+        );
 //        JSONObject result = null;
 //
 //        Object stamp = null;	//时间戳，用来标识返回结果
@@ -57,13 +69,13 @@ public class SupportHandler extends TextWebSocketHandler {
                                       CloseStatus status) throws Exception {
         // TODO Auto-generated method stub
         super.afterConnectionClosed(session, status);
-//        WSServer.instance().disconnect(session);
+
     }
 
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
         super.handleTransportError(session, exception);
-//        WSServer.instance().disconnect(session);
+
         System.out.println(123);
     }
 }
