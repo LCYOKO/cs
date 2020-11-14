@@ -14,12 +14,16 @@ import java.util.*;
  */
 @Component
 public class CustomerPool {
+    private HashSet<Integer> unAssign;
+    private HashSet<Integer> assigned;
     private HashMap<String,MySession> sessionId2MySession;
     private HashMap<Integer,WebSocketSession> uid2WebSocketSession;
     @PostConstruct
     public void init(){
         sessionId2MySession=new HashMap<>(16);
         uid2WebSocketSession=new HashMap<>(16);
+        unAssign=new HashSet<>();
+        assigned=new HashSet<>();
     }
 
     public void removeCustomer(WebSocketSession session){
@@ -37,6 +41,7 @@ public class CustomerPool {
     public void addCustomer(WebSocketSession session,MySession mySession){
         sessionId2MySession.put(session.getId(),mySession);
         uid2WebSocketSession.put(mySession.getUid(),session);
+        unAssign.add(mySession.getUid());
     }
 
     public String getUsernameBySessionId(String sessionId){
@@ -53,5 +58,16 @@ public class CustomerPool {
             return  null;
         }
         return session.getUid();
+    }
+
+    public WebSocketSession getWebSocektSessionByUid(int uid){
+       return uid2WebSocketSession.getOrDefault(uid,null);
+    }
+    public boolean customerAssigned(int id){
+       return assigned.contains(id);
+    }
+    public void adjest(int id){
+        unAssign.remove(id);
+        assigned.add(id);
     }
 }

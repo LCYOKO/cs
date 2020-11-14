@@ -11,7 +11,8 @@ import java.util.List;
 public abstract class AbstractBalance implements Balance {
     @Override
     public WebSocketSession doSelect(List<WebSocketSession> sessions) {
-        return null;
+        if(sessions.size()<=0) return null;
+        return select(sessions);
     }
 
     public abstract WebSocketSession select(List<WebSocketSession> sessions);

@@ -1,7 +1,7 @@
 package com.xiaomi.cs.message;
 
 import lombok.Data;
-import org.springframework.web.socket.WebSocketMessage;
+
 
 /**
  * @author l
@@ -15,4 +15,15 @@ public class SimpleMessage  {
    private String fromUsername;
    private int toUid;
    private String toUsername;
+   public SimpleMessage(){
+
+   }
+   public SimpleMessage(int to,String toName,int from,String fromName,String msg,int type){
+      toUid=to;
+      toUsername=toName;
+      fromUid=from;
+      fromUsername=fromName;
+      this.msg=msg;
+      this.type=type;
+   }
 }

@@ -27,7 +27,6 @@ public class SupportPool {
         uid2WebSocketSession=new ConcurrentHashMap<>(16);
         list=new ArrayList<>();
     }
-
     public List<WebSocketSession> getSupportList(){
         return  list;
     }
@@ -65,7 +64,9 @@ public class SupportPool {
        customers.add(customer);
        return  true;
    }
-
+   public MySession getMySessionById(String sessionId){
+       return sessionId2MySession.getOrDefault(sessionId,null);
+   }
    public int getSupportNum(){
         return list.size();
    }
@@ -73,4 +74,8 @@ public class SupportPool {
    public int getCustomerNumBySupport(String uid){
         return 0;
    }
+
+    public WebSocketSession getWebSocketSessionByUid(int id){
+        return uid2WebSocketSession.getOrDefault(id,null);
+    }
 }
