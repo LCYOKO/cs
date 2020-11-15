@@ -69,7 +69,7 @@
                             if(item.id==cid)  option.setAttribute("selected",'true');
                             $('#cid').append(option);// 下拉菜单里添加元素
                         });
-                        layui.form.render("select");
+                        // layui.form.render("select");
 
                     }
 
@@ -100,7 +100,7 @@
 
         table.on('tool(test)', function(obj){
             var data = obj.data;
-            console.log(data);
+
             if(obj.event === 'del'){
                 layer.confirm('真的删除行么', function(index){
                     obj.del();
@@ -120,7 +120,7 @@
                         },500)
                     }
                 })
-                layui.layer.full(index);
+
             }
         });
 
@@ -143,6 +143,7 @@
             var index = layui.layer.open({
                 title : "添加知识",
                 type : 2,
+                area: ['60%', '100%'],
                 content : "/page?method=/doc/addDoc",
                 success : function(layero, index){
                     setTimeout(function(){
@@ -152,13 +153,14 @@
                     },500)
                 }
             })
-            layui.layer.full(index);
+
         });
 
         $('body').on('click','#addCategory',function () {
             var index = layui.layer.open({
                 title : "添加分类",
                 type : 2,
+                area: ['60%', '100%'],
                 content : "/page?method=/doc/addCategory",
                 success : function(layero, index){
                     setTimeout(function(){
@@ -168,7 +170,7 @@
                     },500)
                 }
             })
-            layui.layer.full(index);
+
         })
 
 
