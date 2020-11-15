@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaomi.cs.mapper.KnowledgeLibraryMapper">
+
+
+<!--   <select id="insertKnowledge" resultType="com.xiaomi.cs.pojo.entity.KnowledgeLibrary">
+        SELECT id,config_value as configValue,config_desc as configDesc,`enable`
+        FROM config WHERE id = #{id}
+    </select>
+
+    <insert id="insertKnowledge" parameterType="com.xiaomi.cs.pojo.entity.KnowledgeLibrary" useGeneratedKeys="true" keyProperty="id">
+        insert into knowledgeLibrary
+        (question, answer,question_type)
+        values (#{question},#{answer},#{questionType.id});
+    </insert>-->
+
+</mapper>
