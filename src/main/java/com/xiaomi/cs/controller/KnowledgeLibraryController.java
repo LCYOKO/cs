@@ -3,13 +3,12 @@ package com.xiaomi.cs.controller;
 import com.xiaomi.cs.common.CommonResponse;
 import com.xiaomi.cs.common.ResponseConstants;
 import com.xiaomi.cs.pojo.entity.KnowledgeLibrary;
+import com.xiaomi.cs.pojo.entity.PageSerializable;
 import com.xiaomi.cs.pojo.entity.QuestionType;
 import com.xiaomi.cs.service.KnowledgeLibraryService;
 import com.xiaomi.cs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -19,19 +18,15 @@ import javax.servlet.http.HttpServletRequest;
  * @create 2020-11-05-10:59
  */
 @RestController
-@RequestMapping("/knowledge")
+@RequestMapping("/question")
 public class KnowledgeLibraryController {
     @Autowired
     private KnowledgeLibraryService knowledgeLibraryService;
-    @GetMapping("/add")
-    public CommonResponse addKowldgeLibrary(KnowledgeLibrary knowledgeLibrary, HttpServletRequest request) {
+
+    @PostMapping("/addQuestion ")
+    public CommonResponse addKowldgeLibrary(@RequestBody KnowledgeLibrary knowledgeLibrary) {
 
         try {
-            knowledgeLibrary.setQuestion("11");
-            knowledgeLibrary.setAnswer("11");
-            QuestionType q= new QuestionType();
-            q.setId(1);
-            knowledgeLibrary.setQuestionType(q);
             knowledgeLibraryService.addKnowledge(knowledgeLibrary);
         } catch (Exception e) {
             new CommonResponse(ResponseConstants.FAIL_CODE, ResponseConstants.FAIL_MSG, null);
@@ -39,12 +34,15 @@ public class KnowledgeLibraryController {
         return new CommonResponse(ResponseConstants.SUCCESS_CODE, ResponseConstants.SUCCESS_MSG, null);
 
     }
-    @GetMapping("/find")
-    public CommonResponse findKowldgeLibraryByIds(KnowledgeLibrary knowledgeLibrary, HttpServletRequest request) {
+
+    @GetMapping("/getAll")
+    public CommonResponse findKowldgeLibraryByIds( @RequestParam(required = false) String question,
+                                                   @RequestParam(required = false) Integer questionTypeId,
+                                                  @RequestParam(required = false,defaultValue = "1") Integer page,
+                                                  @RequestParam(required = false,defaultValue = "10")Integer limit, HttpServletRequest request) {
 
         try {
-
-            KnowledgeLibrary k=knowledgeLibraryService.getKnowledgeById(1);
+            PageSerializable<KnowledgeLibrary> result=knowledgeLibraryService.getKnowledges("11",questionTypeId,page,limit);
         } catch (Exception e) {
             new CommonResponse(ResponseConstants.FAIL_CODE, ResponseConstants.FAIL_MSG, null);
         }

@@ -2,6 +2,7 @@ package com.xiaomi.cs.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xiaomi.cs.pojo.entity.KnowledgeLibrary;
+import com.xiaomi.cs.pojo.entity.PageSerializable;
 import com.xiaomi.cs.pojo.entity.User;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public interface KnowledgeLibraryService  extends IService<KnowledgeLibrary> {
     //删除知识库
     public void delKnowledge(Integer id);
     //批量查询知识库
-    public List<KnowledgeLibrary> getKnowledges(KnowledgeLibrary knowledgeLibrary);
+    public PageSerializable<KnowledgeLibrary> getKnowledges(String question,Integer questionTypeId,Integer page,Integer limit);
     //根据id查询知识库
     public KnowledgeLibrary getKnowledgeById(Integer id);
 

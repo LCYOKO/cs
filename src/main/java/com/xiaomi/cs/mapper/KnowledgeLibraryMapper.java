@@ -6,6 +6,7 @@ import com.xiaomi.cs.pojo.entity.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -15,15 +16,18 @@ import java.util.List;
  */
 public interface KnowledgeLibraryMapper extends BaseMapper<KnowledgeLibrary> {
     //添加知识库
-    @Insert("insert into knowledge_library (question, answer,question_type) values(#{question},#{answer},#{questionType.questionType})")
+    @Insert("insert into knowledge_library (question, answer,question_type_id,keywords) values(#{question},#{answer},#{questionType.id},#{keywords})")
 	@Options(useGeneratedKeys=true,keyProperty="id")
-     int insertKnoeledge(KnowledgeLibrary knowledgeLibrary);
+     void insertKnoeledge(KnowledgeLibrary knowledgeLibrary);
     //更新知识库
      void updateKnoeledge(KnowledgeLibrary knowledgeLibrary);
     //删除知识库
      void delectKnoeledge(Integer id);
     //批量查询知识库
-     List<KnowledgeLibrary> selectKnoeledges(KnowledgeLibrary knowledgeLibrary);
+     List<KnowledgeLibrary> selectKnoeledges(String question, Integer questionTypeId, Integer pageno, Integer limit);
     //根据id查询知识库
+
      List<KnowledgeLibrary> slectKnoeledgeById(Integer id);
+     //查询总数
+    int  selectKnoeledgesCount(KnowledgeLibrary knowledgeLibrary);
 }
