@@ -63,7 +63,6 @@ public class MessageDispatcher {
                          -1, "小爱一号","暂时没有客服",1),message.getFromUid());
                   return ;
               }
-              System.out.println(support+"123");
           MySession mySession = supportPool.getMySessionById(support.getId());
           supportPool.addCustomer(support,session);
           support.sendMessage(new TextMessage(JSONObject.toJSON(MessageFactory.create2CustomerMessage(mySession.getUid(),mySession.getUsername(),
