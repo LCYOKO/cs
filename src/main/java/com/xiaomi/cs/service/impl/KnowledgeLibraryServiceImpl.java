@@ -36,7 +36,11 @@ public class KnowledgeLibraryServiceImpl extends ServiceImpl<KnowledgeLibraryMap
 
     @Override
     public void delKnowledge(Integer id) {
-
+        try {
+            this.baseMapper.deleteById(id);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     @Override
@@ -63,11 +67,8 @@ public class KnowledgeLibraryServiceImpl extends ServiceImpl<KnowledgeLibraryMap
         return result;
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public KnowledgeLibrary getKnowledgeById(Integer id) {
-        KnowledgeLibrary l = this.baseMapper.selectById(id);
-        System.out.println(l.toString());
-        return l;
+        return this.baseMapper.selectById(id);
     }
 }

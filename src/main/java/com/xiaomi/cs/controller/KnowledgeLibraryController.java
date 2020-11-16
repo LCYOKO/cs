@@ -36,7 +36,7 @@ public class KnowledgeLibraryController {
     }
 
     @GetMapping("/getAll")
-    public CommonResponse findKowldgeLibraryByIds( @RequestParam(required = false) String question,
+    public CommonResponse findKowldgeLibrarys( @RequestParam(required = false) String question,
                                                    @RequestParam(required = false) Integer questionTypeId,
                                                   @RequestParam(required = false,defaultValue = "1") Integer page,
                                                   @RequestParam(required = false,defaultValue = "10")Integer limit, HttpServletRequest request) {
@@ -48,6 +48,24 @@ public class KnowledgeLibraryController {
         }
         return new CommonResponse(ResponseConstants.SUCCESS_CODE, ResponseConstants.SUCCESS_MSG, null);
 
+    }
+    @PostMapping("/getQuestion")
+    public CommonResponse findKowldgeLibraryById(@RequestParam  Integer questionId ) {
+        try {
+            KnowledgeLibrary kl=knowledgeLibraryService.getKnowledgeById(questionId);
+            return new CommonResponse(ResponseConstants.SUCCESS_CODE, ResponseConstants.SUCCESS_MSG, kl);
+        } catch (Exception e) {
+            return new CommonResponse(ResponseConstants.FAIL_CODE, ResponseConstants.FAIL_MSG, null);
+        }
+    }
+    @PostMapping("/delQuestion")
+    public CommonResponse delKowldgeLibraryById(@RequestParam  Integer questionId ) {
+        try {
+            knowledgeLibraryService.delKnowledge(questionId);
+            return new CommonResponse(ResponseConstants.SUCCESS_CODE, ResponseConstants.SUCCESS_MSG, null);
+        } catch (Exception e) {
+            return new CommonResponse(ResponseConstants.FAIL_CODE, ResponseConstants.FAIL_MSG, null);
+        }
     }
 
 }

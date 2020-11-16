@@ -21,13 +21,8 @@ public interface KnowledgeLibraryMapper extends BaseMapper<KnowledgeLibrary> {
      void insertKnoeledge(KnowledgeLibrary knowledgeLibrary);
     //更新知识库
      void updateKnoeledge(KnowledgeLibrary knowledgeLibrary);
-    //删除知识库
-     void delectKnoeledge(Integer id);
     //批量查询知识库
      List<KnowledgeLibrary> selectKnoeledges(String question, Integer questionTypeId, Integer pageno, Integer limit);
-    //根据id查询知识库
-
-     List<KnowledgeLibrary> slectKnoeledgeById(Integer id);
      //查询总数
     int  selectKnoeledgesCount(KnowledgeLibrary knowledgeLibrary);
 }
