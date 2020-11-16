@@ -23,7 +23,7 @@ public class KnowledgeLibraryController {
     @Autowired
     private KnowledgeLibraryService knowledgeLibraryService;
 
-    @PostMapping("/addQuestion ")
+    @PostMapping("/addQuestion")
     public CommonResponse addKowldgeLibrary(@RequestBody KnowledgeLibrary knowledgeLibrary) {
 
         try {
