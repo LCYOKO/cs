@@ -30,5 +30,7 @@ public class ResponseConstants {
     public static final String LOGIN_FIAL="账号或密码不正确";
     public static final int USER_NOT_IN=4002;
     public static final String UUSER_NOT_IN_MSG="用户不存在";
+    public static final int ADD_TPYE_FAIL=4003;
+    public static final String ADD_TPYE_FAIL_MSG="该问题分类已存在";
 
 }
