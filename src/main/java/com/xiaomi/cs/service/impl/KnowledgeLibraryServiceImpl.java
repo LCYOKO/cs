@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,7 +34,13 @@ public class KnowledgeLibraryServiceImpl extends ServiceImpl<KnowledgeLibraryMap
 
     @Override
     public void modifyKnowledge(KnowledgeLibrary knowledgeLibrary) {
-
+        try {
+            SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            knowledgeLibrary.setUpdateTime(Timestamp.valueOf(simpleDate.format(new Date())));
+            this.baseMapper.updateKnoeledge(knowledgeLibrary);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     @Override

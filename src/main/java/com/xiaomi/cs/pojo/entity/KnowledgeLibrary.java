@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -21,9 +22,9 @@ public class KnowledgeLibrary implements Serializable {
     //标准答案
     private String answer;
     //创建时间
-    private Long createTime;
+    private Timestamp createTime;
     //更新时间
-    private Long updateTime;
+    private Timestamp updateTime;
     //关键词
     private String  keywords;
     //问题分类

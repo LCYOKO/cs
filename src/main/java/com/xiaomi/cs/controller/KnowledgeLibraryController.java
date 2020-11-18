@@ -67,5 +67,14 @@ public class KnowledgeLibraryController {
             return new CommonResponse(ResponseConstants.FAIL_CODE, ResponseConstants.FAIL_MSG, null);
         }
     }
+    @PostMapping("/updQuestion")
+    public CommonResponse modifKowldgeLibrary(@RequestBody KnowledgeLibrary knowledgeLibrary) {
+        try {
+            knowledgeLibraryService.modifyKnowledge(knowledgeLibrary);
+            return new CommonResponse(ResponseConstants.SUCCESS_CODE, ResponseConstants.SUCCESS_MSG, null);
+        } catch (Exception e) {
+            return new CommonResponse(ResponseConstants.FAIL_CODE, ResponseConstants.FAIL_MSG, null);
+        }
+    }
 
 }

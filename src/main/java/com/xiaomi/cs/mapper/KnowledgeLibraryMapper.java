@@ -3,10 +3,7 @@ package com.xiaomi.cs.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xiaomi.cs.pojo.entity.KnowledgeLibrary;
 import com.xiaomi.cs.pojo.entity.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -20,9 +17,10 @@ public interface KnowledgeLibraryMapper extends BaseMapper<KnowledgeLibrary> {
 	@Options(useGeneratedKeys=true,keyProperty="id")
      void insertKnoeledge(KnowledgeLibrary knowledgeLibrary);
     //更新知识库
+    @Update("update knowledge_library set question=#{question}, answer=#{answer},question_type_id=#{questionType.id},keywords=#{keywords},update_time=#{updateTime} where id=#{id}")
      void updateKnoeledge(KnowledgeLibrary knowledgeLibrary);
     //批量查询知识库
      List<KnowledgeLibrary> selectKnoeledges(String question, Integer questionTypeId, Integer pageno, Integer limit);
-     //查询总数
+     //查询总数S
     int  selectKnoeledgesCount(KnowledgeLibrary knowledgeLibrary);
 }
