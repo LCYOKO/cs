@@ -16,17 +16,18 @@ import java.util.List;
 public class KnowledgeLibrary implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer id;
-    //标准问题
+
     private String question;
-    //标准答案
+
     private String answer;
-    //创建时间
-    private Long createTime;
-    //更新时间
-    private Long updateTime;
-    //关键词
+
+    private String createTime;
+
+    private String updateTime;
+
     private String  keywords;
-    //问题分类
-    @TableField(exist=false)
+
+    private Integer questionTypeId;
+    @TableField(exist = false)
     private QuestionType questionType;
 }

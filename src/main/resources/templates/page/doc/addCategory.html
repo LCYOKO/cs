@@ -10,7 +10,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">分类名</label>
         <div class="layui-input-block">
-            <input type="text" name="categoryName" required  lay-verify="required" placeholder="请输入分类名" autocomplete="off" class="layui-input">
+            <input type="text" name="type" required  lay-verify="required" placeholder="请输入分类名" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
@@ -23,19 +23,27 @@
 </body>
 <script src="../../../static/layui/layui.js"></script>
 <script>
-    layui.use('form', function(){
+    layui.use(['form','layer'], function(){
         var form = layui.form;
         var $=layui.$;
         //监听提交
         form.on('submit(formDemo)', function(data){
             //layer.msg(JSON.stringify(data.field));
             $.ajax({
-                url:'/category/addCategory',
+                url:'/questionType/add',
                 type: 'post',
-                dataType: 'json',
-                data:JSON.stringify(data.field),
+                data:data.field,
                 success:function (res) {
-                   console.log(123);
+                    layui.layer.msg(res.msg,{
+                        icon: 1,
+                        time: 500
+                    });
+                    if(res.code===200){
+                   setTimeout(function () {
+                       var index = parent.layer.getFrameIndex(window.name);
+                       parent.layer.close(index);
+                       parent.location.reload();
+                   },500)}
                 }
             });
             return false;

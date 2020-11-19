@@ -1,12 +1,12 @@
 package com.xiaomi.cs.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.xiaomi.cs.pojo.entity.KnowledgeLibrary;
 import com.xiaomi.cs.pojo.entity.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -15,19 +15,11 @@ import java.util.List;
  * @create 2020-11-14  22:02
  */
 public interface KnowledgeLibraryMapper extends BaseMapper<KnowledgeLibrary> {
-    //添加知识库
-    @Insert("insert into knowledge_library (question, answer,question_type_id,keywords) values(#{question},#{answer},#{questionType.id},#{keywords})")
-	@Options(useGeneratedKeys=true,keyProperty="id")
-     void insertKnoeledge(KnowledgeLibrary knowledgeLibrary);
-    //更新知识库
-     void updateKnoeledge(KnowledgeLibrary knowledgeLibrary);
-    //删除知识库
-     void delectKnoeledge(Integer id);
-    //批量查询知识库
-     List<KnowledgeLibrary> selectKnoeledges(String question, Integer questionTypeId, Integer pageno, Integer limit);
-    //根据id查询知识库
 
-     List<KnowledgeLibrary> slectKnoeledgeById(Integer id);
-     //查询总数
-    int  selectKnoeledgesCount(KnowledgeLibrary knowledgeLibrary);
+
+
+     IPage<KnowledgeLibrary> selAllKnowledge(IPage<KnowledgeLibrary> page,@Param(Constants.WRAPPER) QueryWrapper<KnowledgeLibrary> wrapper);
+
+
+
 }

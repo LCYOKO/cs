@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>添加知识</title>
@@ -7,17 +7,19 @@
 </head>
 <body>
 <form class="layui-form" action="">
+    <div  id="questionId1" name="id" th:value="${knowledge.id}"  hidden>
+    </div>
     <div class="layui-form-item">
         <label class="layui-form-label">标准问</label>
         <div class="layui-input-block">
-            <input type="text" name="question" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+            <input type="text" name="question" required th:value="${knowledge.question}"lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">知识类型</label>
         <div class="layui-input-block" style="{width: 400px;}">
-            <select name="questionTypeId" lay-verify="required" id="questionType">
+            <select name="questionTypeId" lay-verify="required" id="questionType" th:value="${knowledge.questionTypeId}">
                 <option value="">请选择</option>
             </select>
         </div>
@@ -26,7 +28,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">关键字</label>
         <div class="layui-input-inline">
-            <input type="text" name="keywords" style="{width: 400px;}" required lay-verify="required" placeholder="请输入关键字" autocomplete="off" class="layui-input ">
+            <input type="text" th:value="${knowledge.keywords}" name="keywords" style="{width: 400px;}" required lay-verify="required" placeholder="请输入关键字" autocomplete="off" class="layui-input ">
         </div>
         <div class="layui-form-mid layui-word-aux">输入多个关键字 用英文逗号隔开</div>
     </div>
@@ -36,13 +38,13 @@
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">答案编辑框</label>
         <div class="layui-input-block">
-            <textarea name="answer" placeholder="请输入内容" class="layui-textarea"></textarea>
+            <textarea name="answer"  th:value="${knowledge.answer}"  th:text="${knowledge.answer}" placeholder="请输入内容" class="layui-textarea"></textarea>
         </div>
     </div>
 
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button class="layui-btn" lay-submit lay-filter="addDoc">新增</button>
+            <button class="layui-btn" lay-submit lay-filter="updateDoc">提交</button>
             <button type="reset" class="layui-btn layui-btn-primary">重置</button>
         </div>
     </div>
@@ -59,23 +61,27 @@
             success:function (res) {
                 if(res===undefined || res.code!==200){
                     layer.confirm("获取数据失败请稍后再试");
-                   return false;
+                    return false;
                 }
+
                 $.each(res.data, function (index, item) {
                     var option=new Option(item.type, item.id)
-                    console.log(option)
                     $('#questionType').append(option);// 下拉菜单里添加元素
+                    if(parseInt($('#questionType').attr("value"))===item.id)  option.setAttribute("selected",'true');
                 });
                 layui.form.render("select");
             }
         })
-        //监听提交
-        form.on('submit(addDoc)', function(data){
 
+
+        //监听提交
+        form.on('submit(updateDoc)', function(data){
+            var data1=data.field;
+           data1.id=$("#questionId1").attr("value");
             $.ajax({
-                url:'/question/add',
+                url:'/question/update',
                 type: 'post',
-                data:data.field,
+                data:data1,
                 success:function (res) {
                     layui.layer.msg(res.msg,{
                         icon: 1,

@@ -39,27 +39,13 @@ public class SupportHandler extends TextWebSocketHandler {
         String msg = message.getPayload();
 
         SimpleMessage simpleMessage = JSONObject.parseObject(msg, SimpleMessage.class);
+        if(simpleMessage.getType()==1){
+
+        }
         messageDispatcher.sendMessage2Customer(MessageFactory.create2CustomerMessage(simpleMessage.getToUid(),simpleMessage.getToUsername(),
                 simpleMessage.getFromUid(),simpleMessage.getFromUsername(),simpleMessage.getMsg(),MessageTypeConstants.TYPE_SEND_MESSAGE),
                 simpleMessage.getToUid()
         );
-//        JSONObject result = null;
-//
-//        Object stamp = null;	//时间戳，用来标识返回结果
-//        Pattern pattern = Pattern.compile("^\\{(\"\\w+\":\\S+,{0,1})+\\}$");
-//        if(pattern.matcher(msg).matches()){
-//            JSONObject json = JSONObject.fromObject(message.getPayload());
-//            stamp = json.get("stamp");
-//            result = WSDispatcher.dispatch(json, session);
-//        }
-//
-//        String response = "";
-//        if(result == null)	response = "404";
-//        else{
-//            result.put("stamp", stamp);
-//            response = String.valueOf(result);
-//        }
-//        session.sendMessage(new TextMessage(response.getBytes(charset)));
 
     }
 
@@ -69,13 +55,15 @@ public class SupportHandler extends TextWebSocketHandler {
                                       CloseStatus status) throws Exception {
         // TODO Auto-generated method stub
         super.afterConnectionClosed(session, status);
-
+        SimpleMessage message = JSONObject.parseObject(status.getReason(), SimpleMessage.class);
+        messageDispatcher.removeSupport(session,message);
     }
 
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
         super.handleTransportError(session, exception);
 
-        System.out.println(123);
+       messageDispatcher.removeSupport(session,null);
+
     }
 }

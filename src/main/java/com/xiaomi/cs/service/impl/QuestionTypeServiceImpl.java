@@ -10,6 +10,7 @@ import com.xiaomi.cs.pojo.entity.PageSerializable;
 import com.xiaomi.cs.pojo.entity.QuestionType;
 import com.xiaomi.cs.service.KnowledgeLibraryService;
 import com.xiaomi.cs.service.QuestionTypeService;
+import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,13 +26,18 @@ public class QuestionTypeServiceImpl extends ServiceImpl<QuestionTypeMapper, Que
 
 
     @Override
-    public void addQuestionType(String val) {
-         this.baseMapper.insertQuestionType(val);
+    public int addQuestionType(QuestionType type) {
+        QueryWrapper<QuestionType> wrapper = new QueryWrapper<>();
+        wrapper.eq("type",type.getType());
+        if(this.baseMapper.selectOne(wrapper)!=null) {
+            return -1;
+        }
+       return this.baseMapper.insert(type);
     }
 
     @Override
     public List<QuestionType> getQuestionTypes() {
-         return this.getBaseMapper().selectQuestionType(0);
+         return this.getBaseMapper().selectList(null);
     }
 
     @Override

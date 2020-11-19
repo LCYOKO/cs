@@ -12,10 +12,19 @@ import java.util.List;
  * @create 2020-11-14  21:11
  */
 public interface QuestionTypeService extends IService<QuestionType> {
-    //添加问题分类
-    public void addQuestionType(String val);
-    //批量查询问题分类
-    public List<QuestionType> getQuestionTypes();
-    //内容查询查询问题分类
-    public Integer  getQuestionTypeByVal(String val);
+    /**
+    添加问题分类
+     */
+     int addQuestionType(QuestionType type);
+    /**
+     * 批量查询问题分类
+     */
+
+     List<QuestionType> getQuestionTypes();
+
+    /**
+     *内容查询查询问题分类
+     */
+
+    Integer  getQuestionTypeByVal(String val);
 }

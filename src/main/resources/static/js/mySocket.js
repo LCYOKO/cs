@@ -3,9 +3,10 @@ function init(type,username,uid) {
 
 
 
-  //var protocol = location.protocol === 'https:' ? 'wss://' : 'ws://';
+      //10.224.206.5
   socketClient = new WebSocket("ws://10.224.206.5:8082/webSocket/"+type+"?username="+username+"&uid="+uid);//创建Socket实例// 打开Socket
-socketClient.onopen = function (res) {
+      console.log("开始连接-----")
+    socketClient.onopen = function (res) {
     layui.use(['layer'], function () {
         var layer = layui.layer;
         layer.ready(function () {
@@ -27,7 +28,6 @@ socketClient.onopen = function (res) {
 socketClient.onmessage = function (res) {
 
     var data = eval("(" + res.data + ")");
-    console.log(data);
     switch (data['type']) {
         // 服务端ping客户端
         case 101:
@@ -38,7 +38,7 @@ socketClient.onmessage = function (res) {
             addUser(data);
             break;
         // 移除访客到主面板
-        case 'delUser':
+        case 3:
             delUser(data);
             break;
         // 监测聊天数据
@@ -56,6 +56,7 @@ socketClient.onmessage = function (res) {
                 console.log(err)
         layer.alert('连接失败,请联系管理员', {icon: 2, title: '错误提示'});
     };
+
 
 }
 

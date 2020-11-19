@@ -1,97 +1,107 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://mybatis.org/schema/mybatis-mapper">
 <head>
     <meta charset="UTF-8">
     <title>知识库</title>
     <link rel="stylesheet" href="../../../static/layui/css/layui.css" media="all">
+
 </head>
+
+<style>
+    .layui-form-select dl {
+        z-index: 9999;
+    }
+</style>
 <body>
+<div class="layui-row layui-form">
+        <div class="layui-inline">
+            <label class="layui-form-label">问题</label>
+            <div class="layui-input-inline" >
+                <input type="text" name="title"
+                       class="layui-input" id="question" placeholder="请输入问题">
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">分类</label>
+            <div class="layui-input-inline">
+              <select id="questionType">
+                  <option value="">请选择</option>
+              </select>
+            </div>
+        </div>
+
+
+        <div class="layui-inline">
+            <div class="layui-input-inline" >
+        <button class="layui-btn mgl-20" lay-submit="" id="search"><i class="layui-icon">&#xe615;</i>查询</button>
+        <button class="layui-btn layui-btn-normal mgl-20" lay-submit="" id="addDoc"><i class="layui-icon">&#xe654;</i>添加知识</button>
+        <button class="layui-btn layui-btn-normal mgl-20" lay-submit="" id="addCategory"><i class="layui-icon">&#xe654;</i>添加分类</button>
+            </div>
+        </div>
+
+</div>
 <table id="demo" lay-filter="test"></table>
 </body>
 <script type="text/html" id="toolbar">
     <blockquote class="layui-elem-quote news_search">
-        <div class="layui-inline">
-            <div class="layui-input-inline">
-                <input type="text"   id="search_name" placeholder="输入问题"  name="name" class="layui-input search_input">
-            </div>
-            <div class="layui-input-inline">
-<!--th:attr="data-cid=${query!=null?query.cid:''}" -->
-                <select name="cid" id="cid" >
-                    <option value="">选择分类</option>
-                </select>
 
-            </div>
-            <a class="layui-btn search_btn" id="search">查询</a>
-        </div>
-        <div class="layui-inline">
-            <a class="layui-btn layui-btn-normal newsAdd_btn" id="addDoc">添加知识</a>
-        </div>
-        <div class="layui-inline">
-            <a class="layui-btn layui-btn-normal newsAdd_btn" id="addCategory">添加分类</a>
-        </div>
     </blockquote>
 </script>
 
 
 <script type="text/html" id="bar">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-xs" lay-event="delete">删除</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
 </script>
 <script src="../../../static/layui/layui.js"></script>
 <script>
+
     layui.use(['table','form'], function(){
         var table = layui.table;
         var form = layui.form;
         var $ = layui.$;
+
+        $.ajax({
+            url: 'questionType/getAll',
+            type: 'get',
+            success: function (res) {
+                var data=res.data;
+                $.each(data, function (index, item) {
+                    var option=new Option(item.type, item.id)
+                    $('#questionType').append(option);// 下拉菜单里添加元素
+                });
+                layui.form.render("select");
+
+            }});
         //第一个实例
         table.render({
             elem: '#demo'
-            ,toolbar:"#toolbar"
-            ,url: 'http://localhost:9001/food/getAll' //数据接口
+            // ,toolbar:"#toolbar"
+            ,url: '/question/getAll' //数据接口
             ,parseData: function(res){ //res 即为原始返回的数据
                 return {
                     "code": 0, //解析接口状态
                     "msg": "", //解析提示文本
-                    "query":res.data.query1,
                     "count": res.data.total, //解析数据长度
-                    "data": res.data.item //解析数据列表
+                    "data": res.data.records //解析数据列表
                 };}
-            ,done: function(res, curr, count){
-                $.ajax({
-                    url: 'http://localhost:9001/category/getAllList',
-                    dataType: 'json',
-                    type: 'get',
-                    success: function (res) {
-                        var data=res.data.item;
-                        var cid=$("#cid").data("cid");
-                        $.each(data, function (index, item) {
-                            var option=new Option(item.name, item.id)
-                            if(item.id==cid)  option.setAttribute("selected",'true');
-                            $('#cid').append(option);// 下拉菜单里添加元素
-                        });
-                        // layui.form.render("select");
-
-                    }
-
-                })
-                var query=res.query;
-                if(query.name!=undefined&&query.name!=""&&query.name!=null) $("#search_name").attr({"value":query.name});
-                if(query.cid!=undefined&&query.cid!=null) $("#cid").attr({"data-cid":query.cid});
+            ,done: function(){
 
             }
             ,page: true //开启分页
             ,cols: [
                 [
                     {field:'id', title: 'Id', width:'5%', sort: true, fixed: 'left'}
-                    ,{field:'query', title: '标准问', width:'20%'}
-                    ,{filed:'cid',title:'类型',width:'10%',
+                    ,{field:'question', title: '标准问', width:'20%'}
+                    ,{filed:'questionType',title:'类型',width:'10%',
                     templet:function (d) {
-                        return d.category.name;
+                        return d.questionType.type;
                     }}
-                    ,{field:'keyWord',title:'关键字',width:'20%'}
+                    ,{field:'keywords',title:'关键字',width:'20%'}
                     ,{field:'answer',title:'标准答',width:'20%'}
-                    ,{field:'lastUpdateTime',title:'最后更新时间',width:'10%'}
-                    ,{field:'operate',title:'操作',width:'15%',toolbar:"#bar"}]
+                    ,{field:'updateTime',title:'最后更新时间',width:'15%'}
+                    ,{field:'operate',title:'操作',width:'10%',toolbar:"#bar"}]
             ],
 
         });
@@ -100,24 +110,30 @@
 
         table.on('tool(test)', function(obj){
             var data = obj.data;
-
-            if(obj.event === 'del'){
+            if(obj.event === 'delete'){
                 layer.confirm('真的删除行么', function(index){
-                    obj.del();
-                    layer.close(index);
+                    $.ajax({
+                        url: 'question/delete?id='+data.id,
+                        type: 'get',
+                        success: function (res) {
+                            obj.del();
+                            layer.close(index);
+                        }});
+
                 });
             } else if(obj.event === 'edit'){
-                //layer.alert('编辑行：<br>'+ JSON.stringify(data))
+                 console.log(data)
                 var index = layui.layer.open({
-                    title : "编辑菜品",
+                    title : "编辑知识库",
                     type : 2,
-                    content : "editFood?id="+data.id+"&&name="+data.name+"&&state="+data.state+"&&description="+data.description+"&&cid="+data.cid+"&&sale="+data.sale+"&&price="+data.price+"&&num="+data.num,
+                    area: ['60%', '100%'],
+                    content : "editDoc?id="+data.id+"&&question="+data.question+"&&answer="+data.answer+"&&keywords="+data.keywords+"&&questionTypeId="+data.questionType.id,
                     success : function(layero, index){
                         setTimeout(function(){
-                            layui.layer.tips('点击此处返回菜品列表', '.layui-layer-setwin .layui-layer-close', {
+                            layui.layer.tips('点击此处返回知识库', '.layui-layer-setwin .layui-layer-close', {
                                 tips: 3
                             });
-                        },500)
+                        },200)
                     }
                 })
 
@@ -126,12 +142,13 @@
 
 
         $('body').on('click','#search',function(){
-            var name=$("#search_name").val();
-            var cid=$("#cid").val();
+            var name=$("#question").val();
+
+            var cid=$("#questionType").val();
             table.reload('demo',{
                 where:{
-                    name:name,
-                    cid:cid,
+                    question:name,
+                    questionTypeId:cid,
                 },
                 page:{
                     curr:1
@@ -150,7 +167,7 @@
                         layui.layer.tips('点击此处返回知识库', '.layui-layer-setwin .layui-layer-close', {
                             tips: 3
                         });
-                    },500)
+                    },200)
                 }
             })
 
@@ -167,7 +184,7 @@
                         layui.layer.tips('点击此处返回知识库', '.layui-layer-setwin .layui-layer-close', {
                             tips: 3
                         });
-                    },500)
+                    },200)
                 }
             })
 
@@ -177,4 +194,6 @@
 
     });
 </script>
+
+
 </html>
