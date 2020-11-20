@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * @author l
@@ -24,15 +25,19 @@ public class QuestionTypeController {
     private QuestionTypeService questionTypeService;
 
     @PostMapping("/add")
-    public CommonResponse addQuestionType(@RequestParam String questionType) {
+    public CommonResponse addQuestionType(  QuestionType type ) {
+
         try {
-            if(questionTypeService.getQuestionTypeByVal(questionType)!=null){
-                return new CommonResponse(ResponseConstants.ADD_TPYE_FAIL, ResponseConstants.ADD_TPYE_FAIL_MSG, null);
+             int res=questionTypeService.addQuestionType(type);
+            if(res>0){
+                return new CommonResponse(ResponseConstants.SUCCESS_CODE, ResponseConstants.SUCCESS_MSG, null);
             }
-            questionTypeService.addQuestionType(questionType);
-            return new CommonResponse(ResponseConstants.SUCCESS_CODE, ResponseConstants.SUCCESS_MSG, null);
+            if(res<0){
+                return new CommonResponse(ResponseConstants.FAIL_CODE,"类型已存在",null);
+            }
+            return  new CommonResponse(ResponseConstants.FAIL_CODE,ResponseConstants.FAIL_MSG,null);
         } catch (Exception e) {
-            System.out.println(e);
+
             return new CommonResponse(ResponseConstants.FAIL_CODE, ResponseConstants.FAIL_MSG, null);
         }
     }

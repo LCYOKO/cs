@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://mybatis.org/schema/mybatis-mapper">
+<head>
+    <meta charset="UTF-8">
+    <title>知识库</title>
+    <link rel="stylesheet" href="../../../static/layui/css/layui.css" media="all">
+
+</head>
+
+<style>
+    .layui-form-select dl {
+        z-index: 9999;
+    }
+</style>
+<body>
+<div class="layui-row layui-form">
+        <div class="layui-inline">
+            <label class="layui-form-label">问题</label>
+            <div class="layui-input-inline" >
+                <input type="text" name="title"
+                       class="layui-input" id="question" placeholder="请输入问题">
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">分类</label>
+            <div class="layui-input-inline">
+              <select id="questionType">
+                  <option value="">请选择</option>
+              </select>
+            </div>
+        </div>
+
+
+        <div class="layui-inline">
+            <div class="layui-input-inline" >
+        <button class="layui-btn mgl-20" lay-submit="" id="search"><i class="layui-icon">&#xe615;</i>查询</button>
+        <button class="layui-btn layui-btn-normal mgl-20" lay-submit="" id="addDoc"><i class="layui-icon">&#xe654;</i>添加知识</button>
+        <button class="layui-btn layui-btn-normal mgl-20" lay-submit="" id="addCategory"><i class="layui-icon">&#xe654;</i>添加分类</button>
+            </div>
+        </div>
+
+</div>
+<table id="demo" lay-filter="test"></table>
+</body>
+<script type="text/html" id="toolbar">
+    <blockquote class="layui-elem-quote news_search">
+
+    </blockquote>
+</script>
+
+
+<script type="text/html" id="bar">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+</script>
+<script src="../../../static/layui/layui.js"></script>
+<script>
+
+    layui.use(['table','form'], function(){
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.$;
+
+        $.ajax({
+            url: 'questionType/getAll',
+            type: 'get',
+            success: function (res) {
+                var data=res.data;
+                $.each(data, function (index, item) {
+                    var option=new Option(item.type, item.id)
+                    $('#questionType').append(option);// 下拉菜单里添加元素
+                });
+                layui.form.render("select");
+
+            }});
+        //第一个实例
+        table.render({
+            elem: '#demo'
+            // ,toolbar:"#toolbar"
+            ,url: '/question/getAll' //数据接口
+            ,parseData: function(res){ //res 即为原始返回的数据
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": "", //解析提示文本
+                    "count": res.data.total, //解析数据长度
+                    "data": res.data.records //解析数据列表
+                };}
+            ,done: function(){
+
+            }
+            ,page: true //开启分页
+            ,cols: [
+                [
+                    {field:'id', title: 'Id', width:'5%', sort: true, fixed: 'left'}
+                    ,{field:'question', title: '标准问', width:'20%'}
+                    ,{filed:'questionType',title:'类型',width:'10%',
+                    templet:function (d) {
+                        return d.questionType.type;
+                    }}
+                    ,{field:'keywords',title:'关键字',width:'20%'}
+                    ,{field:'answer',title:'标准答',width:'20%'}
+                    ,{field:'updateTime',title:'最后更新时间',width:'15%'}
+                    ,{field:'operate',title:'操作',width:'10%',toolbar:"#bar"}]
+            ],
+
+        });
+
+
+
+        table.on('tool(test)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'delete'){
+                layer.confirm('真的删除行么', function(index){
+                    $.ajax({
+                        url: 'question/delete?id='+data.id,
+                        type: 'get',
+                        success: function (res) {
+                            obj.del();
+                            layer.close(index);
+                        }});
+
+                });
+            } else if(obj.event === 'edit'){
+                 console.log(data)
+                var index = layui.layer.open({
+                    title : "编辑知识库",
+                    type : 2,
+                    area: ['60%', '100%'],
+                    content : "editDoc?id="+data.id+"&&question="+data.question+"&&answer="+data.answer+"&&keywords="+data.keywords+"&&questionTypeId="+data.questionType.id,
+                    success : function(layero, index){
+                        setTimeout(function(){
+                            layui.layer.tips('点击此处返回知识库', '.layui-layer-setwin .layui-layer-close', {
+                                tips: 3
+                            });
+                        },200)
+                    }
+                })
+
+            }
+        });
+
+
+        $('body').on('click','#search',function(){
+            var name=$("#question").val();
+
+            var cid=$("#questionType").val();
+            table.reload('demo',{
+                where:{
+                    question:name,
+                    questionTypeId:cid,
+                },
+                page:{
+                    curr:1
+                }
+            });
+        });
+
+        $('body').on('click','#addDoc',function(){
+            var index = layui.layer.open({
+                title : "添加知识",
+                type : 2,
+                area: ['60%', '100%'],
+                content : "/page?method=/doc/addDoc",
+                success : function(layero, index){
+                    setTimeout(function(){
+                        layui.layer.tips('点击此处返回知识库', '.layui-layer-setwin .layui-layer-close', {
+                            tips: 3
+                        });
+                    },200)
+                }
+            })
+
+        });
+
+        $('body').on('click','#addCategory',function () {
+            var index = layui.layer.open({
+                title : "添加分类",
+                type : 2,
+                area: ['60%', '100%'],
+                content : "/page?method=/doc/addCategory",
+                success : function(layero, index){
+                    setTimeout(function(){
+                        layui.layer.tips('点击此处返回知识库', '.layui-layer-setwin .layui-layer-close', {
+                            tips: 3
+                        });
+                    },200)
+                }
+            })
+
+        })
+
+
+
+    });
+</script>
+
+
+</html>

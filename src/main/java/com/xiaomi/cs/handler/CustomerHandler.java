@@ -18,6 +18,8 @@ import org.springframework.web.socket.*;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import sun.java2d.pipe.SpanShapeRenderer;
 
+import javax.lang.model.element.NestingKind;
+
 
 /**
  * @author l
@@ -66,21 +68,7 @@ public class CustomerHandler extends TextWebSocketHandler {
             );
 
         }
-//        Object stamp = null;	//时间戳，用来标识返回结果
-//        Pattern pattern = Pattern.compile("^\\{(\"\\w+\":\\S+,{0,1})+\\}$");
-//        if(pattern.matcher(msg).matches()){
-//            JSONObject json = JSONObject.fromObject(message.getPayload());
-//            stamp = json.get("stamp");
-//            result = WSDispatcher.dispatch(json, session);
-//        }
-//
-//        String response = "";
-//        if(result == null)	response = "404";
-//        else{
-//            result.put("stamp", stamp);
-//            response = String.valueOf(result);
-//        }
-//        session.sendMessage(new TextMessage(response.getBytes(charset)));
+
 
     }
 
@@ -102,11 +90,16 @@ public class CustomerHandler extends TextWebSocketHandler {
         // TODO Auto-generated method stub
         super.afterConnectionClosed(session, status);
 
+        SimpleMessage message = JSONObject.parseObject(status.getReason(), SimpleMessage.class);
+        messageDispatcher.removeCustomer(session,message);
+        messageDispatcher.printInfo();
     }
 
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
         super.handleTransportError(session, exception);
+        messageDispatcher.removeCustomer(session,new SimpleMessage());
+
 
     }
 

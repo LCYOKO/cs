@@ -2,7 +2,7 @@
 	"contentManagement": [
 		{
 			"title": "会话列表",
-			"icon": "icon-text",
+			"icon": "&#xe626;",
 			"href": "/page/session/session-main",
 			"spread": false,
 			"children": [
@@ -10,12 +10,6 @@
 					"title": "当前会话",
 					"icon": "&#xe770;",
 					"href": "/page?method=session/session-kefu",
-					"spread": false
-				},
-				{
-					"title": "机器人托管会话",
-					"icon": "&#xe609;",
-					"href": "/page?method=session/session-bot",
 					"spread": false
 				}
 			]
@@ -36,13 +30,7 @@
 				{
 					"title": "知识库",
 					"icon": "&#xe61c;",
-					"href": "page/404.html",
-					"spread": false
-				},
-				{
-					"title": "知识库分类",
-					"icon": "&#xe609;",
-					"href": "page/login/login.html",
+					"href": "/page?method=doc/doc",
 					"spread": false
 				}
 			]

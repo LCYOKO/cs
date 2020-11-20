@@ -1,34 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xiaomi.cs.mapper.KnowledgeLibraryMapper">
+
     <resultMap id="knowledgeLibraryMap" type="com.xiaomi.cs.pojo.entity.KnowledgeLibrary">
         <id column="id" property="id"/>
         <result column="question" property="question"/>
         <result column="answer" property="answer"/>
         <result column="update_time" property="updateTime"/>
         <result column="create_time" property="createTime"/>
-
         <result column="keywords" property="keywords"/>
-        <!-- User user  -->
-        <association property="quesion_type" javaType="com.xiaomi.cs.pojo.entity.QuestionType">
-            <id column="id" property="id"/><!-- 外键映射 -->
-            <result column="quesion_type" property="quesion_type"/>
+
+        <association property="questionType" javaType="com.xiaomi.cs.pojo.entity.QuestionType">
+            <id column="type_id" property="id"/>
+            <result column="type" property="type"/>
         </association>
     </resultMap>
 
-    <select id="selectKnoeledges" resultMap="knowledgeLibraryMap">
-        SELECT kl.*,qt.quesion_type
+    <select id="selAllKnowledge"  resultMap="knowledgeLibraryMap" >
+        SELECT kl.*,qt.type,
+        qt.id as type_id
         FROM knowledge_library kl
-        left join quesion_type qt
-        on kl.quesion_type_id=qt.id")
-        WHERE
-        question_type_id =#{questionTypeId}
-        <if test="question != null and question != ''">
-            and question like "%"#{question}"%"
-        </if>
-        limit #{page},#{limit}
-
+        left join question_type qt
+        on kl.question_type_id=qt.id
+        ${ew.customSqlSegment}
     </select>
+
+
 
 
 </mapper>

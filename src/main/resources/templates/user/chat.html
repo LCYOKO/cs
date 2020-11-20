@@ -52,7 +52,27 @@
             e.preventDefault();  // 取消事件的默认动作
              sendMessage($("#user-msg-area").val());
         });
-        $("")
+
+
+
+        $("#userSession").click(function (e) {
+            layui.use(['layer'], function () {
+                var data={fromUid:$("#active-user").attr("data-id"),toUid: localStorage.getItem("fromId")};
+               var layerIndex = layer.confirm('确定关闭会话' , {
+                    title: '关闭提示',
+                    closeBtn: 0,
+                    icon: 3,
+                    btn: ['确定', '取消'] // 按钮
+                }, function(){
+                    layer.close(layerIndex);
+                    var index = parent.layer.getFrameIndex(window.name);
+                    socketClient.close(3001,JSON.stringify(data));
+                    parent.layer.close(index);
+                });
+            });
+        })
+
+
         // 点击表情
         var index;
         $("#face").click(function (e) {
@@ -80,15 +100,6 @@
             });
         });
 
-        // $(document).click(function (e) {
-        //     layui.use(['layer'], function () {
-        //         var layer = layui.layer;
-        //         if (isShow) {
-        //             layer.close(index);
-        //             return false;
-        //         }
-        //     });
-        // });
 
         // 发送消息
         $("#user-send").click(function () {
@@ -110,31 +121,6 @@
         }, function () {
             $(this).find('i').hide();
         });
-
-
-
-        //关闭当前会话
-        $("#closeSession").click(function(){
-            var layerIndex;
-            console.log(1111)
-            layerIndex = layer.confirm('确定关闭会话' , {
-                title: '关闭提示',
-                closeBtn: 0,
-                icon: 3,
-                btn: ['确定', '取消'] // 按钮
-            }, function(){
-                // layer.close(layerIndex);
-                // layerIndex = layer.open({
-                //     title: '',
-                //     type: 1,
-                //     area: ['30%', '40%'],
-                //     content: $("#change-box")
-                // });
-            });
-
-        });
-
-
 
 
         // 检测滚动，异步加载更多聊天数据

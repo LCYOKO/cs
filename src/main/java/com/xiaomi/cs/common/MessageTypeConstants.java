@@ -22,4 +22,5 @@ public class MessageTypeConstants {
 
     public static final int FIRST_CONNECTION=1001;
     public static final int COLSE_CPNNECTION=1002;
+    public static final int UNDER_CARE=1003;
 }

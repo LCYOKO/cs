@@ -1,10 +1,13 @@
 package com.xiaomi.cs.controller;
 
 import com.xiaomi.cs.common.CommonResponse;
+import com.xiaomi.cs.pojo.entity.KnowledgeLibrary;
 import com.xiaomi.cs.pojo.entity.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author l
@@ -36,12 +39,18 @@ public class BaseController {
         return "user/index";
     }
     @GetMapping("/page")
-    public String toSessionMain(String method){
+    public String toSessionMain(String method, HttpServletRequest request){
         return  BASE_PREFIX+method;
     }
     @GetMapping("/user/chat")
     public String toUserChat(){
         return "user/chat";
     }
+
+   @GetMapping("/editDoc")
+    public String toEditDoc(KnowledgeLibrary knowledgeLibrary,HttpServletRequest request){
+         request.setAttribute("knowledge",knowledgeLibrary);
+        return "page/doc/editDoc";
+   }
 
 }

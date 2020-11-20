@@ -173,7 +173,7 @@ function showUserMessage(data) {
     // }
 
     //未读条数计数你好 我是KF 机器人，有什么可以为你服务的
-    console
+
     if (!$('#f-' + data.fromUid).hasClass('active')) {
         var num = $('#f-' + data.fromUid).find('span:eq(1)').text();
         if (num === '' || num=== undefined ) num = 0;
@@ -320,8 +320,8 @@ function checkUser() {
 
 // 删除用户聊天面板
 function delUser(data) {
-    $("#f-" + data.id).remove(); // 清除左侧的用户列表
-    $('#u-' + data.id).remove(); // 清除右侧的聊天详情
+    $("#f-" + data.fromUid).remove(); // 清除左侧的用户列表
+    $('#u-' + data.fromUid).remove(); // 清除右侧的聊天详情
 }
 
 // 发送快捷语句
