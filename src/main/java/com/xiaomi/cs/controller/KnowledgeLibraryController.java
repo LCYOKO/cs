@@ -3,6 +3,7 @@ package com.xiaomi.cs.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xiaomi.cs.common.CommonResponse;
 import com.xiaomi.cs.common.ResponseConstants;
+import com.xiaomi.cs.elasticsearch.service.KnowledgeESLibraryService;
 import com.xiaomi.cs.pojo.entity.KnowledgeLibrary;
 import com.xiaomi.cs.pojo.entity.PageSerializable;
 import com.xiaomi.cs.pojo.entity.QuestionType;
@@ -24,6 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 public class KnowledgeLibraryController {
     @Autowired
     private KnowledgeLibraryService knowledgeLibraryService;
+    @Autowired
+    private KnowledgeESLibraryService knowledgeESLibraryService;
 
     @PostMapping("/add")
     public CommonResponse addKnowledgeLibrary(KnowledgeLibrary knowledgeLibrary) {
@@ -31,11 +34,19 @@ public class KnowledgeLibraryController {
         try {
             int res= knowledgeLibraryService.addKnowledge(knowledgeLibrary);
             if(res>0){
-                return new CommonResponse(ResponseConstants.SUCCESS_CODE, ResponseConstants.SUCCESS_MSG, null);
+                //es中添加
+                knowledgeLibrary.setId(res);
+                int es=knowledgeESLibraryService.addKnowledge(knowledgeLibrary);
+                if(es>0){
+                    return new CommonResponse(ResponseConstants.SUCCESS_CODE, ResponseConstants.SUCCESS_MSG, null);
+                }else{
+                    return new CommonResponse(ResponseConstants.FAIL_CODE,"es保存失败！！",null);
+                }
             }
             if(res<0){
                 return new CommonResponse(ResponseConstants.FAIL_CODE,"问题已存在",null);
             }
+
             return  new CommonResponse(ResponseConstants.FAIL_CODE,ResponseConstants.FAIL_MSG,null);
         } catch (Exception e) {
            return new CommonResponse(ResponseConstants.FAIL_CODE, ResponseConstants.FAIL_MSG, null);
@@ -65,7 +76,13 @@ public class KnowledgeLibraryController {
     public CommonResponse  updateKnowledge(KnowledgeLibrary knowledgeLibrary){
         int  res = knowledgeLibraryService.updateKnowledge(knowledgeLibrary);
         if(res>0){
-            return new CommonResponse(ResponseConstants.SUCCESS_CODE, ResponseConstants.SUCCESS_MSG, null);
+            //es中更新
+            int es=knowledgeESLibraryService.updateKnowledge(knowledgeLibrary);
+            if(es>0){
+                return new CommonResponse(ResponseConstants.SUCCESS_CODE, ResponseConstants.SUCCESS_MSG, null);
+            }else{
+                return new CommonResponse(ResponseConstants.FAIL_CODE,"es修改失败！！",null);
+            }
         }
         return new CommonResponse(ResponseConstants.FAIL_CODE, ResponseConstants.FAIL_MSG, null);
     }
@@ -74,7 +91,13 @@ public class KnowledgeLibraryController {
     public CommonResponse deleteKnowledge(int id){
         int  res = knowledgeLibraryService.delKnowledge(id);
         if(res>0){
-            return new CommonResponse(ResponseConstants.SUCCESS_CODE, ResponseConstants.SUCCESS_MSG, null);
+            //es中更新
+            int es=knowledgeESLibraryService.delKnowledge(id);
+            if(es>0){
+                return new CommonResponse(ResponseConstants.SUCCESS_CODE, ResponseConstants.SUCCESS_MSG, null);
+            }else{
+                return new CommonResponse(ResponseConstants.FAIL_CODE,"es删除失败！！",null);
+            }
         }
         return new CommonResponse(ResponseConstants.FAIL_CODE, ResponseConstants.FAIL_MSG, null);
     }
